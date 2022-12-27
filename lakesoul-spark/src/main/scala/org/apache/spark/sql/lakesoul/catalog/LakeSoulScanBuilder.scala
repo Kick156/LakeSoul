@@ -16,6 +16,7 @@
 
 package org.apache.spark.sql.lakesoul.catalog
 
+import com.dmetasoul.lakesoul.meta.MetaCommit
 import org.apache.hadoop.conf.Configuration
 import org.apache.spark.internal.Logging
 import org.apache.spark.sql.SparkSession
@@ -123,12 +124,8 @@ case class LakeSoulScanBuilder(sparkSession: SparkSession,
       parquetScan(partitionFilters, dataFilters)
     }
     else if (onlyOnePartition) {
-      if (fileIndex.snapshotManagement.snapshot.getPartitionInfoArray.forall(p => p.commit_op.equals("CompactionCommit"))) {
-        parquetScan(partitionFilters, dataFilters)
-      } else {
-        OnePartitionMergeBucketScan(sparkSession, hadoopConf, fileIndex, dataSchema, mergeReadDataSchema(),
-          readPartitionSchema(), pushedParquetFilters, options, tableInfo, partitionFilters, dataFilters)
-      }
+      OnePartitionMergeBucketScan(sparkSession, hadoopConf, fileIndex, dataSchema, mergeReadDataSchema(),
+        readPartitionSchema(), pushedParquetFilters, options, tableInfo, partitionFilters, dataFilters)
     }
     else {
       if (sparkSession.sessionState.conf
@@ -145,10 +142,13 @@ case class LakeSoulScanBuilder(sparkSession: SparkSession,
 
   def parquetScan(partitionFilters: Seq[Expression], dataFilters: Seq[Expression]): Scan = {
     if (sparkSession.sessionState.conf.getConf(LakeSoulSQLConf.NATIVE_IO_ENABLE)) {
+      println("building NativeParquetScan")
       NativeParquetScan(
         sparkSession, hadoopConf, fileIndex, dataSchema, readDataSchema(),
         readPartitionSchema(), pushedParquetFilters, options, partitionFilters, dataFilters)
     } else {
+      println("building ParquetScan")
+//      NativeParquetScan(
       ParquetScan(
         sparkSession, hadoopConf, fileIndex, dataSchema, readDataSchema(),
         readPartitionSchema(), pushedParquetFilters, options, partitionFilters, dataFilters)

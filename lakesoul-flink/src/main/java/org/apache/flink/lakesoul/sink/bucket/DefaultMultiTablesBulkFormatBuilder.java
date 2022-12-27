@@ -23,17 +23,17 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.core.fs.Path;
 import org.apache.flink.lakesoul.sink.writer.AbstractLakeSoulMultiTableSinkWriter;
 import org.apache.flink.lakesoul.sink.writer.LakeSoulMultiTableSinkWriter;
-import org.apache.flink.lakesoul.types.BinarySourceRecord;
+import org.apache.flink.lakesoul.types.JsonSourceRecord;
 
 public class DefaultMultiTablesBulkFormatBuilder
-        extends BulkFormatBuilder<BinarySourceRecord, DefaultMultiTablesBulkFormatBuilder> {
+        extends BulkFormatBuilder<JsonSourceRecord, DefaultMultiTablesBulkFormatBuilder> {
 
     public DefaultMultiTablesBulkFormatBuilder(Path basePath, Configuration conf) {
         super(basePath, conf);
     }
 
     @Override
-    public AbstractLakeSoulMultiTableSinkWriter<BinarySourceRecord> createWriter(Sink.InitContext context, int subTaskId) {
+    public AbstractLakeSoulMultiTableSinkWriter<JsonSourceRecord> createWriter(Sink.InitContext context, int subTaskId) {
         return new LakeSoulMultiTableSinkWriter(
                 subTaskId,
                 context.metricGroup(),

@@ -1,18 +1,3 @@
-/*
- * Copyright [2022] [DMetaSoul Team]
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.apache.arrow.lakesoul.io;
 
 import org.apache.arrow.c.ArrowArray;
@@ -84,6 +69,43 @@ public class ArrowJavaReader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+//        ScanOptions options = new ScanOptions(/*batchSize*/ 1024);
+//        try (
+//                BufferAllocator allocator = new RootAllocator();
+//                DatasetFactory datasetFactory = new FileSystemDatasetFactory(allocator, NativeMemoryPool.getDefault(), FileFormat.PARQUET, uri);
+//                Dataset dataset = datasetFactory.finish();
+//                Scanner scanner = dataset.newScan(options)
+//        ) {
+//            Schema schema = scanner.schema();
+//
+//            scanner.scan().forEach(scanTask-> {
+//                VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator);
+//                VectorLoader loader = new VectorLoader(root);
+//                try (ScanTask.BatchIterator iterator = scanTask.execute()) {
+//                    int cnt = 0;
+//                    int batchNum = 0;
+//                    while (iterator.hasNext()) {
+//                        try (ArrowRecordBatch batch = iterator.next()) {
+//                            System.out.println(batch);
+//                            cnt += batch.getLength();
+//                            batchNum += 1;
+//                            System.out.println(batch.getLength());
+//                            loader.load(batch);
+//                            System.out.println(root.contentToTSVString());
+//                        }
+//                    }
+//                    System.out.println(batchNum);
+//                    System.out.println(cnt);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } catch (Exception e) {
+//                    throw new RuntimeException(e);
+//                }
+//            });
+//            System.out.println(schema);
+//            allocator.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }

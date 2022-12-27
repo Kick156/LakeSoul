@@ -30,8 +30,6 @@ public class PartitionInfo {
 
   private String commitOp;
 
-  private long timestamp;
-
   private List<UUID> snapshot;
 
   private String expression;
@@ -66,14 +64,6 @@ public class PartitionInfo {
 
   public void setCommitOp(String commitOp) {
     this.commitOp = commitOp;
-  }
-
-  public long getTimestamp() {
-    return timestamp;
-  }
-
-  public void setTimestamp(long timestamp) {
-    this.timestamp = timestamp;
   }
 
   public List<UUID> getSnapshot() {

@@ -1,18 +1,3 @@
-/*
- * Copyright [2022] [DMetaSoul Team]
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 #![feature(c_size_t)]
 extern crate core;
 
@@ -218,8 +203,9 @@ pub extern "C" fn create_lakesoul_reader_from_config(
     let config: LakeSoulReaderConfig = from_opaque(config);
     let runtime: Runtime = from_opaque(runtime);
     let result = match LakeSoulReader::new(config) {
-        Ok(reader) => 
-            Result::<Reader>::new(SyncSendableMutableLakeSoulReader::new(reader, runtime)),
+        Ok(reader) => unsafe{
+            Result::<Reader>::new(SyncSendableMutableLakeSoulReader::new(reader, runtime))
+        }
         Err(e) => Result::<Reader>::error(format!("{}", e).as_str()),
     };
     convert_to_nonnull(result)
@@ -352,7 +338,10 @@ pub extern "C" fn create_tokio_runtime_from_builder(
 
 
 #[no_mangle]
-pub extern "C" fn free_tokio_runtime(runtime: NonNull<Result<TokioRuntime>>) {
+pub extern "C" fn free_tokio_runtime(mut runtime: NonNull<Result<TokioRuntime>>) {
+    unsafe {
+        // runtime.as_mut().free::<Runtime>();
+    }
 }
 
 #[cfg(test)]

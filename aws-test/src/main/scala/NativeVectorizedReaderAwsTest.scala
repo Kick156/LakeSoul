@@ -52,7 +52,8 @@ object NativeVectorizedReaderAwsTest {
     val rowCnt = args(1).toInt
     val bucket = args(2)
     val timeout = args(3)
-    val tablePath =  bucket + "test_table"
+    val localFile = args(4) == "local"
+    val awsTablePath =  bucket + "test_table"
     println(srcParquet)
 
     val df = spark
@@ -61,7 +62,13 @@ object NativeVectorizedReaderAwsTest {
       .load(srcParquet)
       .toDF()
 
-//    val tablePath = "/opt/spark/work-dir/test_table"
+    val localTablePath = "/opt/spark/work-dir/test_table"
+    val tablePath = if localFile {
+      localTablePath
+    } else {
+      awsTablePath
+    }
+
     df
       .write
       .format("lakesoul")

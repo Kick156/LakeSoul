@@ -63,7 +63,7 @@ object NativeVectorizedReaderAwsTest {
       .toDF()
 
     val localTablePath = "/opt/spark/work-dir/test_table"
-    val tablePath = if localFile {
+    val tablePath = if (localFile) {
       localTablePath
     } else {
       awsTablePath
